@@ -32,10 +32,11 @@
             line-height: 1.5;
         }
 
-        /* Smooth Scroll & Reveal Classes */
         html {
             scroll-behavior: smooth;
         }
+
+        /* Smooth Scroll & Reveal Classes */
         .reveal {
             opacity: 0;
             transform: translateY(40px);
@@ -51,17 +52,17 @@
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 1.5rem 2rem;
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: center;
             z-index: 100;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
             border-bottom: 1px solid var(--glass-border);
         }
         nav h1 {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 600;
             letter-spacing: 0.05em;
         }
@@ -73,27 +74,41 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 8rem 2rem 4rem;
+            padding: 7rem 1rem 3rem;
             text-align: center;
         }
         .hero h2 {
-            font-size: clamp(3rem, 8vw, 6rem);
+            font-size: clamp(2.5rem, 7vw, 6rem);
             font-weight: 700;
             letter-spacing: -0.02em;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
         }
         .hero p {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-size: clamp(1.1rem, 2.5vw, 1.6rem);
             color: var(--text-muted);
             max-width: 800px;
-            margin-bottom: 1.5rem;
+            margin: 1.5rem auto;
             font-weight: 400;
+        }
+        .spotify-container {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 2rem;
         }
 
         /* Call To Action Button */
+        .cta-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 3rem;
+            width: 100%;
+        }
         .cta-button {
             display: inline-block;
-            margin-bottom: 3rem;
             padding: 1rem 2.5rem;
             background: var(--text-main);
             color: var(--bg-color);
@@ -102,9 +117,12 @@
             font-weight: 600;
             border-radius: 50px;
             transition: all 0.3s ease;
+            text-align: center;
+            width: 85%;
+            max-width: 300px;
         }
         .cta-button:hover {
-            transform: scale(1.05);
+            transform: scale(1.03);
             box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
             background: #e0e0e0;
         }
@@ -114,63 +132,68 @@
             width: 100%;
             max-width: 900px;
             position: relative;
-            margin-bottom: 3rem;
+            margin: 2rem auto;
         }
         .car-image {
             width: 100%;
             height: auto;
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-sm);
             object-fit: cover;
             transition: opacity 0.4s ease-in-out;
         }
         .color-picker {
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
-            margin-top: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1.5rem auto 0;
             background: var(--glass-bg);
-            padding: 1rem 2rem;
+            padding: 0.75rem 1.5rem;
             border-radius: 50px;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            width: max-content;
-            margin-inline: auto;
+            width: fit-content;
+            max-width: 90%;
         }
         .color-dot {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
             border: 2px solid transparent;
             transition: transform 0.3s ease, border 0.3s ease;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-        .color-dot:hover {
+        .color-dot:hover, .color-dot.active {
             transform: scale(1.15);
         }
         .color-dot.active {
             border: 2px solid var(--text-main);
-            transform: scale(1.15);
+        }
+        .wifi-notice {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
         }
 
         /* Section Formatting */
         section {
-            padding: 6rem 2rem;
+            padding: 4rem 1.5rem;
             max-width: 1200px;
             margin: 0 auto;
         }
         .section-header {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 3rem;
         }
         .section-header h3 {
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 5vw, 3rem);
             margin-bottom: 1rem;
         }
         .section-header p {
             color: var(--text-muted);
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 2vw, 1.2rem);
             max-width: 700px;
             margin: 0 auto;
         }
@@ -178,46 +201,54 @@
         /* Specs Grid */
         .specs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
         }
         .spec-card {
             background: var(--glass-bg);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            padding: 3rem 2rem;
+            border-radius: var(--radius-md);
+            padding: 2.5rem 1.5rem;
             text-align: center;
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .spec-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px);
         }
         .spec-card h4 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin-bottom: 1rem;
             color: #fff;
         }
         .spec-card p {
             color: var(--text-muted);
-            font-size: 1.1rem;
+            font-size: 1rem;
+        }
+        .fuel-metrics {
+            display: block;
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
         }
 
         /* Gallery Grid */
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
+            grid-template-columns: 1fr;
+            gap: 1rem;
         }
         .gallery-item {
             position: relative;
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-sm);
             overflow: hidden;
             background: var(--glass-bg);
+            aspect-ratio: 4 / 3;
         }
         .gallery-item.large {
-            grid-column: span 2;
+            aspect-ratio: 16 / 9;
         }
         .gallery-item img {
             width: 100%;
@@ -227,32 +258,90 @@
             transition: transform 0.8s ease;
         }
         .gallery-item:hover img {
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
         .gallery-caption {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            padding: 2rem 1.5rem 1.5rem;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 1.5rem 1rem 1rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
             font-weight: 600;
+            font-size: 0.95rem;
         }
 
         /* Footer */
         footer {
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 4rem 1.5rem;
             border-top: 1px solid var(--glass-border);
             color: var(--text-muted);
         }
+        footer .cta-group {
+            margin-bottom: 2rem;
+        }
+        footer p {
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+        }
+        .home-btn {
+            background-color: #2c2c2e; 
+            color: white;
+        }
+        .home-btn:hover {
+            background-color: #3a3a3c;
+        }
 
-        @media (max-width: 768px) {
+        /* Tablets & Desktop Viewports */
+        @media (min-width: 768px) {
+            nav {
+                padding: 1.5rem 2rem;
+            }
+            nav h1 {
+                font-size: 1.2rem;
+            }
+            .hero {
+                padding: 8rem 2rem 4rem;
+            }
+            .cta-group {
+                flex-direction: row;
+                gap: 1.5rem;
+            }
+            .cta-button {
+                width: auto;
+            }
+            .car-image {
+                border-radius: var(--radius-lg);
+            }
+            .color-dot {
+                width: 32px;
+                height: 32px;
+            }
+            section {
+                padding: 6rem 2rem;
+            }
+            .specs-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 2rem;
+            }
+            .spec-card {
+                border-radius: var(--radius-lg);
+                padding: 3rem 2rem;
+            }
             .gallery-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            .gallery-item {
+                border-radius: var(--radius-md);
             }
             .gallery-item.large {
-                grid-column: span 1;
+                grid-column: span 2;
+            }
+            .gallery-caption {
+                padding: 2rem 1.5rem 1.5rem;
+                font-size: 1rem;
             }
         }
     </style>
@@ -264,16 +353,17 @@
     </nav>
 
     <section class="hero reveal">
-        <h2>Drive it like a stolen!</h2>
-        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/7hMweDmQ4w6IuJEFbThMQC?utm_source=generator" width="80%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-        <p style="padding-top: 50px;"></p>
-        <a href="..\GTS\index.html" class="cta-button">Explore GTS Variant</a>
-        <a style="background-color: #3b3b3b; color: white;" href="..\index.html" class="cta-button">Home</a>
+        <h2>Drive it like it's stolen!</h2>
+        
+        <div class="spotify-container">
+            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/7hMweDmQ4w6IuJEFbThMQC?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
 
-        <p></p>
+        <div class="cta-group">
+            <a href="../GTS/index.html" class="cta-button">Explore GTS Variant</a>
+        </div>
+
         <p>Engineered for the enthusiast, designed for the everyday. The advent hatchback combines a responsive, naturally aspirated heart with precision chassis tuning. Every corner is a revelation.</p>
-        
-        
         
         <div class="interactive-display">
             <img id="mainCarImage" src="color/black.png" alt="advent Hatchback" class="car-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjUwMCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIyMiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmaWxsPSIjNzc3IiBkeT0iLjNlbSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Y29sb3IvYmxhY2sucG5nPC90ZXh0Pjwvc3ZnPg=='">
@@ -287,7 +377,7 @@
                 <div class="color-dot" style="background-color: #e6c300;" data-color="yellow" title="Yellow"></div>
             </div>
         </div>
-        <p style="font-size: 100%;">If color doesn't change, it means you have slow wifi</p>
+        <p class="wifi-notice">If color doesn't change, it means you have slow wifi</p>
     </section>
 
     <section class="specs-section">
@@ -311,7 +401,7 @@
             </div>
             <div class="spec-card reveal">
                 <h4>Fuel Efficiency</h4>
-                <span style="font-style: italic; padding-bottom: 50px; color: #86868b; size: 10%;"> 35.1 US MPG / 42.2 UK MPG /  6.7 L/100km </span>
+                <span class="fuel-metrics">35.1 US MPG / 42.2 UK MPG / 6.7 L/100km</span>
                 <p>Optimized engine mapping and lightweight construction for exceptional fuel economy without compromising performance.</p>
             </div>
         </div>
@@ -354,15 +444,16 @@
             </div>
             <div class="gallery-item large reveal">
                 <img src="img/5.png" alt="Detail 5" onerror="this.style.backgroundColor='#1a1a1a'">
-                <div class="gallery-caption">vfewrfwejhkfjwebf</div>
+                <div class="gallery-caption">Dynamic Profile</div>
             </div>
-            
         </div>
-        
     </section>
 
     <footer>
-        <a href="..\GTS\index.html" class="cta-button">Explore GTS Variant</a>
+        <div class="cta-group">
+            <a href="../GTS/index.html" class="cta-button">Explore GTS Variant</a>
+            <a href="https://marqueznelju.github.io/Advent/" class="cta-button home-btn">Home</a>
+        </div>
         <p>© 2026 Advent by Leopard Motors. The purest form of driving.</p>
     </footer>
 
@@ -373,27 +464,21 @@
 
         colorDots.forEach(dot => {
             dot.addEventListener('click', () => {
-                // Remove active class from all
                 colorDots.forEach(d => d.classList.remove('active'));
-                // Add active class to clicked
                 dot.classList.add('active');
                 
-                // Fade out image
                 mainImage.style.opacity = 0;
                 
                 setTimeout(() => {
-                    // Update image source based on data attribute
                     const colorName = dot.getAttribute('data-color');
                     mainImage.src = `color/${colorName}.png`;
                     
-                    // Fallback visual if image isn't loaded/found locally yet
                     mainImage.onerror = function() {
                         this.src = `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjUwMCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIyMiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmaWxsPSIjNzc3IiBkeT0iLjNlbSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Y29sb3Iv${colorName}.wbmc8L3RleHQ+PC9zdmc+`;
                     };
                     
-                    // Fade image back in
                     mainImage.style.opacity = 1;
-                }, 300); // Wait for fade out transition
+                }, 300);
             });
         });
 
@@ -401,8 +486,8 @@
         const revealElements = document.querySelectorAll('.reveal');
 
         const revealOptions = {
-            threshold: 0.15, // Trigger when 15% of element is visible
-            rootMargin: "0px 0px -50px 0px"
+            threshold: 0.10,
+            rootMargin: "0px 0px -40px 0px"
         };
 
         const revealOnScroll = new IntersectionObserver(function(entries, observer) {
@@ -411,7 +496,7 @@
                     return;
                 } else {
                     entry.target.classList.add('active');
-                    observer.unobserve(entry.target); // Only animate once
+                    observer.unobserve(entry.target);
                 }
             });
         }, revealOptions);
@@ -420,15 +505,16 @@
             revealOnScroll.observe(el);
         });
         
-        // Trigger initial active state for elements already in view on load
-        setTimeout(() => {
-            document.querySelectorAll('.reveal').forEach(el => {
-                const rect = el.getBoundingClientRect();
-                if(rect.top < window.innerHeight) {
-                    el.classList.add('active');
-                }
-            });
-        }, 100);
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelectorAll('.reveal').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if(rect.top < window.innerHeight) {
+                        el.classList.add('active');
+                    }
+                });
+            }, 100);
+        });
     </script>
 </body>
 </html>
