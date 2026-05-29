@@ -219,6 +219,7 @@
         /* ── Specs ── */
         .specs-grid {
             display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 1px;
             background: var(--border);
             border-radius: var(--radius);
@@ -226,19 +227,11 @@
             margin-top: 3rem;
             border: 1px solid var(--border);
         }
-        .spec-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            background: var(--bg);
-        }
-        .spec-row:last-child { border-bottom: none; }
         .spec-cell {
             padding: 1.8rem 1.5rem;
-            border-right: 1px solid var(--border);
             background: var(--surface);
             transition: background 0.2s ease;
         }
-        .spec-cell:last-child { border-right: none; }
         .spec-cell:hover { background: rgba(255,255,255,0.06); }
         .spec-key {
             font-family: 'DM Mono', monospace;
@@ -317,7 +310,7 @@
         }
 
         @media (min-width: 768px) {
-            .spec-row { grid-template-columns: repeat(3, 1fr); }
+            .specs-grid { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
@@ -339,7 +332,6 @@
         <p class="sub reveal" style="transition-delay:0.14s">
             Engineered for the enthusiast, designed for the everyday. A naturally aspirated heart with precision chassis tuning—every corner a revelation.
         </p>
-
         <div class="cta-row reveal" style="transition-delay:0.22s">
             <a href="../GTS/index.html" class="btn btn-primary">Explore GTS Variant</a>
             <a href="../index.html" class="btn btn-ghost">Back to Home</a>
@@ -372,35 +364,29 @@
         </div>
 
         <div class="specs-grid reveal" style="transition-delay:0.1s">
-            <div class="spec-row">
-                <div class="spec-cell">
-                    <p class="spec-key">Engine</p>
-                    <p class="spec-val">1.7L NA I4<small>Naturally Aspirated</small></p>
-                </div>
-                <div class="spec-cell">
-                    <p class="spec-key">Power</p>
-                    <p class="spec-val">145 hp<small>@ 6,800 rpm</small></p>
-                </div>
+            <div class="spec-cell">
+                <p class="spec-key">Engine</p>
+                <p class="spec-val">1.7L NA I4<small>Naturally Aspirated</small></p>
             </div>
-            <div class="spec-row">
-                <div class="spec-cell">
-                    <p class="spec-key">Torque</p>
-                    <p class="spec-val">175 Nm<small>129 lb-ft</small></p>
-                </div>
-                <div class="spec-cell">
-                    <p class="spec-key">0–100 km/h</p>
-                    <p class="spec-val">8.8 s<small>6-spd Manual / 7-spd DCT</small></p>
-                </div>
+            <div class="spec-cell">
+                <p class="spec-key">Power</p>
+                <p class="spec-val">145 hp<small>@ 6,800 rpm</small></p>
             </div>
-            <div class="spec-row">
-                <div class="spec-cell">
-                    <p class="spec-key">Fuel Economy</p>
-                    <p class="spec-val">6.7 L/100km<small>35.1 US MPG</small></p>
-                </div>
-                <div class="spec-cell">
-                    <p class="spec-key">Drive</p>
-                    <p class="spec-val">FWD<small>Front-Wheel Drive</small></p>
-                </div>
+            <div class="spec-cell">
+                <p class="spec-key">Torque</p>
+                <p class="spec-val">175 Nm<small>129 lb-ft</small></p>
+            </div>
+            <div class="spec-cell">
+                <p class="spec-key">0–100 km/h</p>
+                <p class="spec-val">8.8 s<small>6-spd Manual / 7-spd DCT</small></p>
+            </div>
+            <div class="spec-cell">
+                <p class="spec-key">Fuel Economy</p>
+                <p class="spec-val">6.7 L/100km<small>35.1 US MPG</small></p>
+            </div>
+            <div class="spec-cell">
+                <p class="spec-key">Drive</p>
+                <p class="spec-val">FWD<small>Front-Wheel Drive</small></p>
             </div>
         </div>
     </div>
