@@ -1,232 +1,656 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advent GTS 6MT | Turbocharged Performance</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Apple-esque typography and smooth rendering */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #000000;
-            color: #f5f5f7;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advent GTS 6MT | Turbocharged</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Custom scrollbar for webkit */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #000000;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #333333;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555555;
-        }
+    :root {
+      --bg: #080809;
+      --glass: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.08);
+      --glass-hover: rgba(255,255,255,0.07);
+      --text: #f0ede8;
+      --muted: rgba(240,237,232,0.45);
+      --accent: #e8622a;
+      --accent-dim: rgba(232,98,42,0.15);
+      --blur: 24px;
+      --r-card: 24px;
+      --r-pill: 999px;
+      
+      /* Apple System Font Stack */
+      --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
 
-        /* Animation classes for Intersection Observer */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    html { scroll-behavior: smooth; }
 
-        /* Subtle ambient glow behind the main car */
-        .ambient-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 70vw;
-            height: 40vw;
-            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%);
-            z-index: -1;
-            pointer-events: none;
-        }
-    </style>
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      letter-spacing: -0.01em; /* Crisp default tracking for dark UI */
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 99px; }
+
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 680px;
+      z-index: 900;
+      background: rgba(12,12,14,0.6);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      border-radius: var(--r-pill);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .nav-logo span { font-weight: 400; color: var(--accent); }
+
+    .nav-links { display: flex; gap: 8px; }
+
+    .nav-btn {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      padding: 7px 16px;
+      border-radius: var(--r-pill);
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .nav-btn:hover {
+      background: var(--glass-hover);
+      border-color: rgba(255,255,255,0.14);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 20px 60px;
+      position: relative;
+    }
+
+    /* ambient blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      opacity: 0.55;
+    }
+    .blob-1 {
+      width: min(600px, 90vw); height: min(400px, 60vw);
+      background: radial-gradient(circle, rgba(232,98,42,0.18) 0%, transparent 70%);
+      top: 10%; left: 50%; transform: translateX(-50%);
+    }
+    .blob-2 {
+      width: min(500px, 80vw); height: min(350px, 55vw);
+      background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+      bottom: 5%; left: 20%;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.1s forwards;
+    }
+
+    .hero-title {
+      font-size: clamp(48px, 11vw, 100px);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.04em; /* Tight tracking for massive Apple-style display text */
+      text-align: center;
+      margin-bottom: 22px;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.2s forwards;
+    }
+    .hero-title em {
+      font-style: normal;
+      font-weight: 400;
+      color: rgba(240,237,232,0.4);
+    }
+
+    .hero-sub {
+      font-size: clamp(15px, 2.5vw, 19px);
+      font-weight: 400;
+      color: var(--muted);
+      text-align: center;
+      max-width: 420px;
+      line-height: 1.5;
+      letter-spacing: -0.015em;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.35s forwards;
+    }
+
+    /* pill badges */
+    .badge-row {
+      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.45s forwards;
+    }
+    .badge {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 7px 16px;
+      border-radius: var(--r-pill);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+    .badge.accent {
+      background: var(--accent-dim);
+      border-color: rgba(232,98,42,0.25);
+      color: #f48a5a;
+    }
+
+    /* hero image card */
+    .hero-card {
+      width: 100%;
+      max-width: 1000px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      border-radius: 32px;
+      padding: 8px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset;
+      opacity: 0;
+      animation: fadeUp 1s 0.5s forwards;
+    }
+    .hero-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 26px;
+      display: block;
+      object-fit: cover;
+    }
+
+    /* ─── STATS STRIP ─── */
+    .stats {
+      padding: 0 20px 80px;
+      max-width: 1000px;
+      margin: 0 auto;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.9s forwards;
+    }
+    .stats-inner {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(40px) saturate(160%);
+      -webkit-backdrop-filter: blur(40px) saturate(160%);
+      border-radius: var(--r-card);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      overflow: hidden;
+    }
+    .stat {
+      padding: 28px 24px;
+      text-align: center;
+      position: relative;
+    }
+    .stat + .stat::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20%; bottom: 20%;
+      width: 1px;
+      background: var(--glass-border);
+    }
+    .stat-value {
+      font-size: clamp(32px, 5vw, 46px);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .stat-value span { color: var(--accent); font-size: 0.5em; font-weight: 500; vertical-align: super; margin-left: 2px; }
+    .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ─── SECTION TITLES ─── */
+    .section-head {
+      text-align: center;
+      padding: 0 20px 48px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .section-head h2 {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 14px;
+    }
+    .section-head p {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1.5;
+      letter-spacing: -0.01em;
+    }
+
+    /* ─── NARRATIVE ─── */
+    .narrative {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+    .narrative-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(50px) saturate(140%);
+      -webkit-backdrop-filter: blur(50px) saturate(140%);
+      border-radius: var(--r-card);
+      padding: clamp(28px, 5vw, 52px);
+      position: relative;
+      overflow: hidden;
+    }
+    .narrative-card::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(232,98,42,0.5), transparent);
+    }
+    .narrative-text {
+      font-size: clamp(16px, 2.2vw, 20px);
+      font-weight: 400;
+      line-height: 1.5;
+      color: rgba(240,237,232,0.75);
+      letter-spacing: -0.015em;
+    }
+    .narrative-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ─── GALLERY ─── */
+    .gallery {
+      padding: 0 20px 100px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: 280px;
+      gap: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 220px;
+      }
+      .g1, .g2, .g3, .g4, .g5, .g6, .g7 {
+        grid-column: 1 / -1 !important;
+        grid-row: auto !important;
+      }
+    }
+
+    @media (min-width: 641px) and (max-width: 900px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 240px;
+      }
+      .g1, .g4 { grid-column: span 2; }
+      .g2, .g3, .g5, .g6, .g7 { grid-column: span 1; }
+    }
+
+    @media (min-width: 901px) {
+      .g1 { grid-column: 1 / 9; grid-row: 1; }
+      .g2 { grid-column: 9 / 13; grid-row: 1; }
+      .g3 { grid-column: 1 / 5; grid-row: 2; }
+      .g4 { grid-column: 5 / 13; grid-row: 2; }
+      .g5 { grid-column: 1 / 5; grid-row: 3; }
+      .g6 { grid-column: 5 / 9; grid-row: 3; }
+      .g7 { grid-column: 9 / 13; grid-row: 3; }
+    }
+
+    .g-item {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: var(--r-card);
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.4s cubic-bezier(0.25,0.1,0.25,1), box-shadow 0.4s;
+    }
+    .g-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .g-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.25,0.1,0.25,1);
+    }
+    .g-item:hover img { transform: scale(1.04); }
+
+    /* ─── CTA ─── */
+    .cta-section {
+      padding: 80px 20px 100px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-glow {
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: min(700px, 100vw); height: 300px;
+      background: radial-gradient(ellipse at bottom, rgba(232,98,42,0.14) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-inner {
+      max-width: 580px;
+      margin: 0 auto;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(60px) saturate(160%);
+      -webkit-backdrop-filter: blur(60px) saturate(160%);
+      border-radius: 32px;
+      padding: clamp(36px, 6vw, 60px) clamp(24px, 5vw, 52px);
+      text-align: center;
+      position: relative;
+    }
+    .cta-inner::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: 20%; right: 20%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    }
+    .cta-inner h2 {
+      font-size: clamp(28px, 5vw, 40px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 14px;
+    }
+    .cta-inner p {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--muted);
+      margin-bottom: 32px;
+      line-height: 1.5;
+      letter-spacing: -0.015em;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--text);
+      color: #0a0a0b;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      padding: 14px 32px;
+      border-radius: var(--r-pill);
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.25s;
+    }
+    .cta-btn:hover { opacity: 0.88; transform: scale(1.03); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--glass-border);
+      padding: 32px 20px;
+      text-align: center;
+      color: rgba(240,237,232,0.25);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    /* ─── MODAL ─── */
+    .modal {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(4,4,5,0.92);
+      backdrop-filter: blur(60px) saturate(120%);
+      -webkit-backdrop-filter: blur(60px) saturate(120%);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .modal.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal img {
+      max-width: 100%; max-height: 88svh;
+      border-radius: 20px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+      transform: scale(0.95);
+      transition: transform 0.35s cubic-bezier(0.25,0.1,0.25,1);
+      object-fit: contain;
+    }
+    .modal.open img { transform: scale(1); }
+    .modal-close {
+      position: absolute; top: 20px; right: 24px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 50%;
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text); font-size: 20px; cursor: pointer;
+      transition: background 0.2s;
+      line-height: 1;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.12); }
+
+    /* ─── REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.75s cubic-bezier(0.25,0.1,0.25,1), transform 0.75s cubic-bezier(0.25,0.1,0.25,1);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ─── KEYFRAMES ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: none; }
+    }
+  </style>
 </head>
-<body class="relative overflow-x-hidden">
+<body>
 
-    <!-- Floating Navigation Bar -->
-    <nav class="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 w-[92%] sm:w-[85%] md:w-full md:max-w-3xl z-50 bg-white/5 border border-white/10 backdrop-blur-2xl rounded-full px-4 md:px-6 py-2.5 md:py-3 flex justify-between items-center shadow-2xl transition-all duration-300">
-        <div class="font-bold tracking-tight text-lg md:text-xl text-white">ADVENT <span class="text-orange-500">GTS</span></div>
-        <div class="flex gap-2 md:gap-4 items-center">
-            <a href="..\Ecobeast\index.html" class="bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-md text-white text-xs md:text-sm font-medium px-4 md:px-5 py-1.5 md:py-2 rounded-full transition-all duration-300">
-                Compare
-            </a>
-            <a href="..\index.html" class="bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-md text-white text-xs md:text-sm font-medium px-4 md:px-5 py-1.5 md:py-2 rounded-full transition-all duration-300">
-                Home
-            </a>
-        </div>
-    </nav>
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">ADVENT <span>GTS</span></div>
+    <div class="nav-links">
+      <a href="../Ecobeast/index.html" class="nav-btn">Compare</a>
+      <a href="../index.html" class="nav-btn">Home</a>
+    </div>
+  </nav>
 
-    <!-- Hero Section -->
-    <header class="relative min-h-screen flex flex-col items-center justify-center pt-28 md:pt-32 pb-12 md:pb-16 px-4 md:px-6">
-        <div class="ambient-glow"></div>
-        
-        <div class="text-center z-10 reveal">
-            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500">
-                Advent GTS
-            </h1>
-            <p class="text-lg sm:text-xl md:text-3xl text-gray-400 mb-8 md:mb-10 font-light tracking-tight max-w-2xl mx-auto">
-                6MT with Turbocharger. <br class="hidden md:block"/> Pure driving exhilaration.
-            </p>
-        </div>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
 
-        <div class="w-full max-w-6xl mt-4 md:mt-8 reveal group perspective">
-            <div class="relative rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3rem] p-1.5 md:p-2 bg-white/5 border border-white/10 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-transform duration-700 md:hover:scale-[1.01]">
-                <img src="img/8.png" alt="Advent GTS Front" class="w-full h-auto rounded-[1.35rem] sm:rounded-[1.75rem] md:rounded-[2.75rem] object-cover" onerror="this.src='https://via.placeholder.com/1200x800/222/fff?text=img/8.png'">
-                
-                <!-- Spec Pills overlay -->
-                <div class="absolute bottom-4 left-4 md:bottom-6 md:left-6 flex gap-2 md:gap-3 flex-wrap">
-                    <div class="bg-black/60 md:bg-black/40 backdrop-blur-xl border border-white/10 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-[10px] sm:text-xs md:text-sm font-medium text-white shadow-lg">6-Speed Manual</div>
-                    <div class="bg-black/60 md:bg-black/40 backdrop-blur-xl border border-white/10 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-[10px] sm:text-xs md:text-sm font-medium text-white shadow-lg">Turbocharged</div>
-                </div>
-            </div>
-        </div>
-    </header>
+    <p class="hero-eyebrow">2026 · 6-Speed Manual · Turbocharged</p>
+    <h1 class="hero-title">Advent <em>GTS</em></h1>
+    <p class="hero-sub">Pure driving exhilaration, distilled into every shift.</p>
 
-    <!-- Performance Narrative Section -->
-    <section class="max-w-4xl mx-auto px-6 py-12 md:py-20 text-center reveal">
-        <p class="text-lg sm:text-xl md:text-2xl text-gray-300 font-light leading-relaxed tracking-wide max-w-3xl mx-auto">
-            Engineered for apex agility and heart-pounding acceleration, the turbocharged variant commands a thrilling 245 hp and a surging 350 Nm (258 lb-ft) of torque. Mated exclusively to a precision-gated 6-speed manual transmission for maximum driver engagement, this high-performance hatchback aggressively launches from 0-100 km/h (0-62 mph) in a blistering 6.2 seconds, redefining what it means to command the road.
-        </p>
-    </section>
-
-    <!-- Bento Grid Gallery -->
-    <section class="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
-        <div class="text-center mb-12 md:mb-16 reveal">
-            <h2 class="text-3xl md:text-5xl font-bold tracking-tight mb-3 md:mb-4">Design in every detail.</h2>
-            <p class="text-gray-400 text-base md:text-lg">Aggressive styling. Aerodynamic precision.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 auto-rows-[220px] sm:auto-rows-[300px] md:auto-rows-[400px]">
-            
-            <!-- Item 1 (Spans 2 columns on desktop) -->
-            <div class="reveal md:col-span-2 relative group overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 backdrop-blur-lg p-1.5 md:p-2">
-                <img src="img/1.png" alt="Advent GTS Angle" class="w-full h-full object-cover rounded-[1.25rem] md:rounded-[2rem] transition-transform duration-700 md:group-hover:scale-105" onerror="this.src='https://via.placeholder.com/800x400/222/fff?text=img/1.png'">
-            </div>
-            
-            <!-- Item 2 -->
-            <div class="reveal relative group overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 backdrop-blur-lg p-1.5 md:p-2">
-                <img src="img/2.png" alt="Advent GTS Rear" class="w-full h-full object-cover rounded-[1.25rem] md:rounded-[2rem] transition-transform duration-700 md:group-hover:scale-105" onerror="this.src='https://via.placeholder.com/400x400/222/fff?text=img/2.png'">
-            </div>
-            
-            <!-- Item 3 -->
-            <div class="reveal relative group overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 backdrop-blur-lg p-1.5 md:p-2">
-                <img src="img/3.png" alt="Advent GTS Side" class="w-full h-full object-cover rounded-[1.25rem] md:rounded-[2rem] transition-transform duration-700 md:group-hover:scale-105" onerror="this.src='https://via.placeholder.com/400x400/222/fff?text=img/3.png'">
-            </div>
-
-            <!-- Item 4 (Spans 2 columns on desktop) -->
-            <div class="reveal md:col-span-2 relative group overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 backdrop-blur-lg p-1.5 md:p-2">
-                <img src="img/4.png" alt="Advent GTS Rear Angle" class="w-full h-full object-cover rounded-[1.25rem] md:rounded-[2rem] transition-transform duration-700 md:group-hover:scale-105" onerror="this.src='https://via.placeholder.com/800x400/222/fff?text=img/4.png'">
-            </div>
-
-            <!-- Row 3 (3 columns) -->
-            <div class="reveal relative group overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 backdrop-blur-lg p-1.5 md:p-2">
-                <img src="img/5.png" alt="Advent GTS Details" class="w-full h-full object-cover rounded-[1.25rem] md:rounded-[2rem] transition-transform duration-700 md:group-hover:scale-105" onerror="this.src='https://via.placeholder.com/400x400/222/fff?text=img/5.png'">
-            </div>
-            <div class="reveal relative group overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 backdrop-blur-lg p-1.5 md:p-2">
-                <img src="img/6.png" alt="Advent GTS Details" class="w-full h-full object-cover rounded-[1.25rem] md:rounded-[2rem] transition-transform duration-700 md:group-hover:scale-105" onerror="this.src='https://via.placeholder.com/400x400/222/fff?text=img/6.png'">
-            </div>
-            <div class="reveal relative group overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 backdrop-blur-lg p-1.5 md:p-2">
-                <img src="img/7.png" alt="Advent GTS Details" class="w-full h-full object-cover rounded-[1.25rem] md:rounded-[2rem] transition-transform duration-700 md:group-hover:scale-105" onerror="this.src='https://via.placeholder.com/400x400/222/fff?text=img/7.png'">
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Call to Action Section -->
-    <section class="py-24 md:py-32 px-4 md:px-6 relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent z-0"></div>
-        <div class="max-w-4xl mx-auto text-center relative z-10 reveal">
-            <h2 class="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tighter mb-4 md:mb-6">Built for the enthusiast.</h2>
-            <p class="text-lg md:text-xl text-gray-400 mb-8 md:mb-12">Discover the roots. Check out the foundation of the GTS.</p>
-            
-            <a href="..\Ecobeast\index.html" class="inline-block bg-white text-black font-semibold text-base md:text-lg px-8 md:px-10 py-3.5 md:py-4 rounded-full transition-all duration-300 md:hover:scale-105 md:hover:shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-                View Ecobeast Variant
-            </a>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="border-t border-white/10 bg-black/80 backdrop-blur-xl py-10 md:py-12 px-6 text-center reveal">
-        <p class="text-gray-500 text-sm">
-            &copy; 2026 Advent by Leopard Motors.<br>
-        </p>
-    </footer>
-
-    <!-- Image Preview Modal -->
-    <div id="imageModal" class="fixed inset-0 z-[100] hidden bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <button onclick="closeModal()" class="absolute top-4 right-6 md:top-6 md:right-8 text-white text-4xl md:text-5xl font-light cursor-pointer hover:text-gray-400 transition-colors z-50">&times;</button>
-        <img id="modalImg" class="max-w-full max-h-[85vh] md:max-h-[90vh] rounded-[1.5rem] md:rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] scale-95 transition-transform duration-300 object-contain" src="" alt="Preview">
+    <div class="badge-row">
+      <div class="badge accent">245 hp</div>
+      <div class="badge accent">350 Nm</div>
+      <div class="badge">6-Speed Manual</div>
+      <div class="badge">0–100 in 6.2s</div>
     </div>
 
-    <script>
-        // Use standard modern IntersectionObserver instead of raw scroll handlers for stutter-free performance
-        document.addEventListener("DOMContentLoaded", () => {
-            const reveals = document.querySelectorAll(".reveal");
-            
-            const observerOptions = {
-                root: null,
-                rootMargin: "0px",
-                threshold: 0.12 // Element reveals when 12% visible in viewport
-            };
+    <div class="hero-card">
+      <img src="img/8.png" alt="Advent GTS"
+           onerror="this.src='https://via.placeholder.com/1000x560/111/444?text=Advent+GTS'" />
+    </div>
+  </section>
 
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("active");
-                        observer.unobserve(entry.target); // Optimize performance by unobserving once revealed
-                    }
-                });
-            }, observerOptions);
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stats-inner">
+      <div class="stat">
+        <div class="stat-value">245<span>hp</span></div>
+        <div class="stat-label">Peak Power</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">350<span>Nm</span></div>
+        <div class="stat-label">Torque</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">6.2<span>s</span></div>
+        <div class="stat-label">0 – 100 km/h</div>
+      </div>
+    </div>
+  </div>
 
-            reveals.forEach(el => observer.observe(el));
-        });
+  <!-- NARRATIVE -->
+  <section class="narrative reveal">
+    <div class="section-head">
+      <h2>Built to be felt.</h2>
+      <p>Every component tuned for the driver who refuses to let go of the wheel.</p>
+    </div>
+    <div class="narrative-card">
+      <p class="narrative-text">
+        Engineered for apex agility and heart-pounding acceleration, the turbocharged variant commands a thrilling <strong>245 hp</strong> and a surging <strong>350 Nm</strong> of torque — mated exclusively to a precision-gated <strong>6-speed manual transmission</strong> for maximum driver engagement. This high-performance hatchback launches from 0–100 km/h in a blistering <strong>6.2 seconds</strong>, redefining what it means to command the road.
+      </p>
+    </div>
+  </section>
 
-        // Image Preview Modal Logic
-        const modal = document.getElementById("imageModal");
-        const modalImg = document.getElementById("modalImg");
-        const images = document.querySelectorAll(".grid img, header img");
+  <!-- GALLERY -->
+  <section class="gallery">
+    <div class="section-head reveal">
+      <h2>Every angle, a statement.</h2>
+      <p>Aggressive lines. Aerodynamic resolve. A silhouette that commands attention.</p>
+    </div>
 
-        images.forEach(img => {
-            img.classList.add("cursor-pointer"); 
-            img.addEventListener("click", function() {
-                modal.classList.remove("hidden");
-                setTimeout(() => {
-                    modal.classList.remove("opacity-0");
-                    modalImg.classList.remove("scale-95");
-                    modalImg.classList.add("scale-100");
-                }, 10);
-                modalImg.src = this.src;
-            });
-        });
+    <div class="gallery-grid">
+      <div class="g-item g1 reveal"><img src="img/1.png" alt="GTS Angle" onerror="this.src='https://via.placeholder.com/800x400/111/444?text=1'"></div>
+      <div class="g-item g2 reveal"><img src="img/2.png" alt="GTS Rear" onerror="this.src='https://via.placeholder.com/400x400/111/444?text=2'"></div>
+      <div class="g-item g3 reveal"><img src="img/3.png" alt="GTS Side" onerror="this.src='https://via.placeholder.com/400x400/111/444?text=3'"></div>
+      <div class="g-item g4 reveal"><img src="img/4.png" alt="GTS Rear Angle" onerror="this.src='https://via.placeholder.com/800x400/111/444?text=4'"></div>
+      <div class="g-item g5 reveal"><img src="img/5.png" alt="GTS Detail" onerror="this.src='https://via.placeholder.com/400x400/111/444?text=5'"></div>
+      <div class="g-item g6 reveal"><img src="img/6.png" alt="GTS Detail" onerror="this.src='https://via.placeholder.com/400x400/111/444?text=6'"></div>
+      <div class="g-item g7 reveal"><img src="img/7.png" alt="GTS Detail" onerror="this.src='https://via.placeholder.com/400x400/111/444?text=7'"></div>
+    </div>
+  </section>
 
-        function closeModal() {
-            modal.classList.add("opacity-0");
-            modalImg.classList.remove("scale-100");
-            modalImg.classList.add("scale-95");
-            setTimeout(() => {
-                modal.classList.add("hidden");
-            }, 300);
+  <!-- CTA -->
+  <section class="cta-section reveal">
+    <div class="cta-glow"></div>
+    <div class="cta-inner">
+      <h2>Built for the enthusiast.</h2>
+      <p>Discover the roots. Explore the foundation the GTS was built upon.</p>
+      <a href="../Ecobeast/index.html" class="cta-btn">View Ecobeast Variant →</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2026 Advent by Leopard Motors
+  </footer>
+
+  <!-- MODAL -->
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <img src="" id="modalImg" alt="Preview" />
+  </div>
+
+  <script>
+    // Intersection observer reveal
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
         }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => io.observe(el));
 
-        modal.addEventListener("click", function(e) {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-    </script>
+    // Modal
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    const modalClose = document.getElementById('modalClose');
+
+    document.querySelectorAll('.g-item img, .hero-card img').forEach(img => {
+      img.style.cursor = 'pointer';
+      img.addEventListener('click', () => {
+        modalImg.src = img.src;
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    function closeModal() {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
 </body>
 </html>
